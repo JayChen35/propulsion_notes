@@ -1,15 +1,7 @@
-# Welcome to your Jupyter Book
+# Propulsion Fluids: A Practical Guide
+Fluid mechanics is notoriously frustrating to master, and I've found myself at numerous points learning 
+and re-learning the same concepts. This is my attempt at compiling everything I've learned at SpaceX and 
+[MASA](https://masa.engin.umich.edu/), and (hopefully) explaining it in a way that is practical to the 
+discipline of stage propulsion, and most importantly, intuitive. I hope you find it useful!
 
-This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out [the Jupyter Book documentation](https://jupyterbook.org) for more information.
-
-Check out the content pages bundled with this sample book to see more.
-
-\begin{equation}
-    \int_{a}^{b} dx
-\end{equation}
-
-```{tableofcontents}
-```
+Visit [my website](https://jaychen35.github.io/) to learn more about me!
