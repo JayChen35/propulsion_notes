@@ -1,9 +1,9 @@
 # Introduction
 For 95% of fluids analysis problems, we can reduce the real-world complexity of the fluids system into a simple graph: a network of vertices and edges. 
-Vertices (also often called **nodes**) are complete representations of a finite volume of gas, where all thermodynamic properties are known.
-**Edges**, or the connections between nodes, represent exchanges of mass, energy, and momentum.
+Vertices (also often called *nodes*) are complete representations of a finite volume of gas, where all thermodynamic properties are known.
+*Edges*, or the connections between nodes, represent exchanges of mass, energy, and momentum. This type of modeling is often referred to as a lumped capacitance model.
 
-This framework can be applied to pretty much any fluids system, and often does great at hitting the **80/20 mark** of analysis&mdash;we achieve 80% of the fidelity with 20% of the work. There are seldom cases where this approach is insufficient, and in these cases, you can typically increase fidelity by simply increasing the node count in the graph, or by decreasing the time increment `dt`.
+This framework can be applied to pretty much any fluids system, and often does great at hitting the **80/20 mark** of analysis&mdash;we achieve 80% of the fidelity with 20% of the work. There are seldom cases where this approach is insufficient, and in these cases, you can typically increase fidelity by simply increasing the node count in the graph, or by decreasing the time increment.
 
 ## The Approach
 1. Decide on what parts of the system are nodes, and which have negligable enough volume to be considered as connections between nodes.
@@ -48,7 +48,7 @@ To get this second equation, we start with the first law of thermodynamics in ex
 
 $$ dE = \delta{Q}^\leftarrow - \delta{W}^\rightarrow $$
 
-Since we're interested in the evolution of this COPV over time, we can rewrite in terms of a time differential specifically for this particular control volume, *i*.
+Since we're interested in the evolution of this COPV over time, we can rewrite in terms of a time differential.
 
 $$
 \begin{equation} 
@@ -71,7 +71,7 @@ In plain English, it says that:
 
 Going back to our refined first law statement, we can now cross off terms we know are zero.
 
-$$ \frac{dE_i}{dt} = \sum_{\textrm{inflow}}\dot{m}h_0 $$
+$$ \frac{dE}{dt} = \sum_{\textrm{inflow}}\dot{m}h_0 $$
 
 The next big step now is to relate the change in total internal energy to changes in state variables, which we can integrate.
 
@@ -79,25 +79,51 @@ $$ E = me = \rho V e $$
 
 $$ \frac{dE}{dt} = \frac{d\rho}{dt}Ve + \rho\frac{dV}{dt}e + \rho V \frac{de}{dt} $$
 
-We know that volume is constant, so the middle term goes to zero.
+We know that volume is constant, so the middle term goes to zero. We also know that specifically in the conext of this problem, the density change is only due to a mass change (since $V$ is constant) and therefore $\frac{d\rho}{dt}V = \frac{dm}{dt}$:
 
 $$ \frac{dE}{dt} = \frac{dm}{dt}e + \rho V \frac{de}{dt} $$
 
-Here, we can try to differentiate $\frac{de}{dt}$ via the chain rule given the calorically perfect assumption that $e = c_v T$. However, not only does this unnecessarily make an assumption, but it also makes the problem harder to solve, since we now need to track and solve for the behavior of $c_v$. Recall that any thermodynamic state can be fully defined by two independent state variables, and since we already obtained an ODE from mass conservation earlier, our aim here should be to obtain another ODE of a state variable as a function of only known quantities.
+Here is where we have to be careful. Remember that our end goal is to derive an expression of a state variable's change over time as a function of known quantities (we already have one with respect to mass, so another ODE allows us to solve the system fully). You might want to jump to some substitutions here, such as $e = c_v T$, but recall that this makes the calorically perfect assumption.
 
-For the sake of argument, we could try to express $c_v$ as follows:
+Instead, we should always try to start as general as possible and make conscious decisions on assumptions to simplify our equations. So, for a real gas, we know that the internal energy is a function of both $\rho$ and $T$:
 
-$$ \frac{de}{dt} = \frac{d c_v}{dt}T + c_v \frac{d T}{dt} $$
+$$
+\begin{align*}
+e &= f(\rho, T) \\
+\frac{de}{dt} &= \frac{\partial e}{\partial \rho} \frac{d \rho}{dt} + \frac{\partial e}{\partial T} \frac{dT}{dt}
+\end{align*}
+$$
 
-$$ \frac{d c_v}{dt} = \frac{\partial c_v}{\partial T}\frac{dT}{dt} + \frac{\partial c_v}{\partial \rho}\frac{d\rho}{dt}  $$
+We can see here that this form is a bit *too* general, and there are no terms we can immediately deduce or cross off. So, let us make that next-most unrestrictive assumption, which is that the gas is thermally perfect. This means that $e$ only varies as a function of temperature.
 
-However, it's clear that this is messier. So instead, we can use some clever algebra to obtain the expression we want. By definition at constant volume:
+$$ e = e(T) $$ 
+$$ de = c_v(T) dT $$
 
-$$ c_v = \frac{de}{dT} $$
+Note that $c_v(T)$ here just denotes that $c_v$ is a function of temperature; this is due to the vibrational and electronic motion of the particles. This is still not particularly useful, even if we derive it:
+
+$$ 
+\frac{de}{dt} = \frac{d c_v(T)}{dt} dT + c_v(T) \frac{dT}{dt}
+$$
+
+Using the [chain rule](https://tutorial.math.lamar.edu/classes/calciii/chainrule.aspx):
+
+$$ \frac{de}{dt} = \frac{d c_v(T)}{dT} \frac{dT}{dt} dT + c_v(T) \frac{dT}{dt} $$
+$$
+\frac{de}{dt} = \left( \frac{d c_v(T)}{dT}dT + c_v(T) \right) \frac{dT}{dt}
+$$
+
+<!-- $$ \frac{de}{dt} = \frac{d c_v}{dt}T + c_v \frac{d T}{dt} $$
+$$ \frac{d c_v}{dt} = \frac{\partial c_v}{\partial T}\frac{dT}{dt} + \frac{\partial c_v}{\partial \rho}\frac{d\rho}{dt}  $$ -->
+
+So perhaps there is one more route to take before making more assumptions. If we take the definition of specific heat at constant volume:
+
+$$ c_v = \left( \frac{de}{dT} \right)_{v=\textrm{const}} $$
+
+We'll notice that since our volume is always constant in this problem, we can rearrange: 
 
 $$ \frac{1}{c_v} = \frac{dT}{de} $$
 
-So we can rewrite the tricky term for energy as:
+This allows us to rewrite the tricky term for energy (without making any assumptions) as:
 
 $$ \frac{de}{dt} = c_v \left( \frac{1}{c_v} \right) \frac{de}{dt} = c_v \left( \frac{dT}{de} \right) \frac{de}{dt} = c_v \frac{dT}{dt} $$
 
@@ -111,16 +137,15 @@ $$
 \end{align}
 $$
 
-We've now found two ODEs expressing the change of two independent state variables $(c_v, T)$ over time. To get the full state evolution of this problem, we just need an initial condition and to numerically integrate these ODEs using libraries such as `scipy.integrate.ode` for Python or `ode45` for MATLAB. To translate these two state variables to a full description of a gas state, we'll need a real gas database such as `REFPROP` to get the other state variables, such as pressure, enthalpy, and entropy.
+We've now found two ODEs expressing the change of two independent state variables $(m, T)$ over time. To get the full state evolution of this problem, we just need an initial condition and to numerically integrate these ODEs using libraries such as `scipy.integrate.ode` for Python or `ode45` for MATLAB. To translate these two state variables to a full description of a gas state, we'll need a real gas database such as `REFPROP` to get the other state variables, such as pressure, enthalpy, and entropy.
 
 ## Common Pitfalls
 > (1) Not using the differential form of thermodynamic relations.
 
 In many of the relations discussed in these documents, the differential form is the actual definition of the quantity, while its relation to other state properties incur some assumption. For example, the definition of specific heat capacity at constant volume is:
 
-$$
-c_v = \frac{\delta Q}{dT}|_{V=\textrm{const}}
-$$
+$$ c_v = \left( \frac{de}{dT} \right)_{v=\textrm{const}} $$
+
 
 However, if you use the relation to temperature and specific internal energy, you would be making a calorically perfect assumption:
 

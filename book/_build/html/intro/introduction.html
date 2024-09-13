@@ -420,9 +420,9 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
 <p>For 95% of fluids analysis problems, we can reduce the real-world complexity of the fluids system into a simple graph: a network of vertices and edges.
-Vertices (also often called <strong>nodes</strong>) are complete representations of a finite volume of gas, where all thermodynamic properties are known.
-<strong>Edges</strong>, or the connections between nodes, represent exchanges of mass, energy, and momentum.</p>
-<p>This framework can be applied to pretty much any fluids system, and often does great at hitting the <strong>80/20 mark</strong> of analysis—we achieve 80% of the fidelity with 20% of the work. There are seldom cases where this approach is insufficient, and in these cases, you can typically increase fidelity by simply increasing the node count in the graph, or by decreasing the time increment <code class="docutils literal notranslate"><span class="pre">dt</span></code>.</p>
+Vertices (also often called <em>nodes</em>) are complete representations of a finite volume of gas, where all thermodynamic properties are known.
+<em>Edges</em>, or the connections between nodes, represent exchanges of mass, energy, and momentum. This type of modeling is often referred to as a lumped capacitance model.</p>
+<p>This framework can be applied to pretty much any fluids system, and often does great at hitting the <strong>80/20 mark</strong> of analysis—we achieve 80% of the fidelity with 20% of the work. There are seldom cases where this approach is insufficient, and in these cases, you can typically increase fidelity by simply increasing the node count in the graph, or by decreasing the time increment.</p>
 <section id="the-approach">
 <h2>The Approach<a class="headerlink" href="#the-approach" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
@@ -464,7 +464,7 @@ m &amp;= \rho V \\
 <p>To get this second equation, we start with the first law of thermodynamics in extensive form:</p>
 <div class="math notranslate nohighlight">
 \[ dE = \delta{Q}^\leftarrow - \delta{W}^\rightarrow \]</div>
-<p>Since we’re interested in the evolution of this COPV over time, we can rewrite in terms of a time differential specifically for this particular control volume, <em>i</em>.</p>
+<p>Since we’re interested in the evolution of this COPV over time, we can rewrite in terms of a time differential.</p>
 <div class="math notranslate nohighlight">
 \[
 \begin{equation} 
@@ -485,27 +485,50 @@ m &amp;= \rho V \\
 <p><sup>Also, recall the sign convention for these superscript arrows: heat (Q) is defined as positive when heat is transfered <strong>to</strong> the system, <strong>from</strong> its surroundings. Thus, the left side of the arrow denotes the system, while the right side denotes the surroundings.</sup></p>
 <p>Going back to our refined first law statement, we can now cross off terms we know are zero.</p>
 <div class="math notranslate nohighlight">
-\[ \frac{dE_i}{dt} = \sum_{\textrm{inflow}}\dot{m}h_0 \]</div>
+\[ \frac{dE}{dt} = \sum_{\textrm{inflow}}\dot{m}h_0 \]</div>
 <p>The next big step now is to relate the change in total internal energy to changes in state variables, which we can integrate.</p>
 <div class="math notranslate nohighlight">
 \[ E = me = \rho V e \]</div>
 <div class="math notranslate nohighlight">
 \[ \frac{dE}{dt} = \frac{d\rho}{dt}Ve + \rho\frac{dV}{dt}e + \rho V \frac{de}{dt} \]</div>
-<p>We know that volume is constant, so the middle term goes to zero.</p>
+<p>We know that volume is constant, so the middle term goes to zero. We also know that specifically in the conext of this problem, the density change is only due to a mass change (since <span class="math notranslate nohighlight">\(V\)</span> is constant) and therefore <span class="math notranslate nohighlight">\(\frac{d\rho}{dt}V = \frac{dm}{dt}\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[ \frac{dE}{dt} = \frac{dm}{dt}e + \rho V \frac{de}{dt} \]</div>
-<p>Here, we can try to differentiate <span class="math notranslate nohighlight">\(\frac{de}{dt}\)</span> via the chain rule given the calorically perfect assumption that <span class="math notranslate nohighlight">\(e = c_v T\)</span>. However, not only does this unnecessarily make an assumption, but it also makes the problem harder to solve, since we now need to track and solve for the behavior of <span class="math notranslate nohighlight">\(c_v\)</span>. Recall that any thermodynamic state can be fully defined by two independent state variables, and since we already obtained an ODE from mass conservation earlier, our aim here should be to obtain another ODE of a state variable as a function of only known quantities.</p>
-<p>For the sake of argument, we could try to express <span class="math notranslate nohighlight">\(c_v\)</span> as follows:</p>
+<p>Here is where we have to be careful. Remember that our end goal is to derive an expression of a state variable’s change over time as a function of known quantities (we already have one with respect to mass, so another ODE allows us to solve the system fully). You might want to jump to some substitutions here, such as <span class="math notranslate nohighlight">\(e = c_v T\)</span>, but recall that this makes the calorically perfect assumption.</p>
+<p>Instead, we should always try to start as general as possible and make conscious decisions on assumptions to simplify our equations. So, for a real gas, we know that the internal energy is a function of both <span class="math notranslate nohighlight">\(\rho\)</span> and <span class="math notranslate nohighlight">\(T\)</span>:</p>
 <div class="math notranslate nohighlight">
-\[ \frac{de}{dt} = \frac{d c_v}{dt}T + c_v \frac{d T}{dt} \]</div>
+\[\begin{split}
+\begin{align*}
+e &amp;= f(\rho, T) \\
+\frac{de}{dt} &amp;= \frac{\partial e}{\partial \rho} \frac{d \rho}{dt} + \frac{\partial e}{\partial T} \frac{dT}{dt}
+\end{align*}
+\end{split}\]</div>
+<p>We can see here that this form is a bit <em>too</em> general, and there are no terms we can immediately deduce or cross off. So, let us make that next-most unrestrictive assumption, which is that the gas is thermally perfect. This means that <span class="math notranslate nohighlight">\(e\)</span> only varies as a function of temperature.</p>
 <div class="math notranslate nohighlight">
-\[ \frac{d c_v}{dt} = \frac{\partial c_v}{\partial T}\frac{dT}{dt} + \frac{\partial c_v}{\partial \rho}\frac{d\rho}{dt}  \]</div>
-<p>However, it’s clear that this is messier. So instead, we can use some clever algebra to obtain the expression we want. By definition at constant volume:</p>
+\[ e = e(T) \]</div>
 <div class="math notranslate nohighlight">
-\[ c_v = \frac{de}{dT} \]</div>
+\[ de = c_v(T) dT \]</div>
+<p>Note that <span class="math notranslate nohighlight">\(c_v(T)\)</span> here just denotes that <span class="math notranslate nohighlight">\(c_v\)</span> is a function of temperature; this is due to the vibrational and electronic motion of the particles. This is still not particularly useful, even if we derive it:</p>
+<div class="math notranslate nohighlight">
+\[ 
+\frac{de}{dt} = \frac{d c_v(T)}{dt} dT + c_v(T) \frac{dT}{dt}
+\]</div>
+<p>Using the <a class="reference external" href="https://tutorial.math.lamar.edu/classes/calciii/chainrule.aspx">chain rule</a>:</p>
+<div class="math notranslate nohighlight">
+\[ \frac{de}{dt} = \frac{d c_v(T)}{dT} \frac{dT}{dt} dT + c_v(T) \frac{dT}{dt} \]</div>
+<div class="math notranslate nohighlight">
+\[
+\frac{de}{dt} = \left( \frac{d c_v(T)}{dT}dT + c_v(T) \right) \frac{dT}{dt}
+\]</div>
+<!-- $$ \frac{de}{dt} = \frac{d c_v}{dt}T + c_v \frac{d T}{dt} $$
+$$ \frac{d c_v}{dt} = \frac{\partial c_v}{\partial T}\frac{dT}{dt} + \frac{\partial c_v}{\partial \rho}\frac{d\rho}{dt}  $$ -->
+<p>So perhaps there is one more route to take before making more assumptions. If we take the definition of specific heat at constant volume:</p>
+<div class="math notranslate nohighlight">
+\[ c_v = \left( \frac{de}{dT} \right)_{v=\textrm{const}} \]</div>
+<p>We’ll notice that since our volume is always constant in this problem, we can rearrange:</p>
 <div class="math notranslate nohighlight">
 \[ \frac{1}{c_v} = \frac{dT}{de} \]</div>
-<p>So we can rewrite the tricky term for energy as:</p>
+<p>This allows us to rewrite the tricky term for energy (without making any assumptions) as:</p>
 <div class="math notranslate nohighlight">
 \[ \frac{de}{dt} = c_v \left( \frac{1}{c_v} \right) \frac{de}{dt} = c_v \left( \frac{dT}{de} \right) \frac{de}{dt} = c_v \frac{dT}{dt} \]</div>
 <p>Putting it all together:</p>
@@ -517,7 +540,7 @@ m &amp;= \rho V \\
 \frac{dT}{dt} &amp;= \frac{1}{m c_v} \left( \sum_{\textrm{inflow}}\dot{m}h_0 - \frac{dm}{dt}e \right)
 \end{align}
 \end{split}\]</div>
-<p>We’ve now found two ODEs expressing the change of two independent state variables <span class="math notranslate nohighlight">\((c_v, T)\)</span> over time. To get the full state evolution of this problem, we just need an initial condition and to numerically integrate these ODEs using libraries such as <code class="docutils literal notranslate"><span class="pre">scipy.integrate.ode</span></code> for Python or <code class="docutils literal notranslate"><span class="pre">ode45</span></code> for MATLAB. To translate these two state variables to a full description of a gas state, we’ll need a real gas database such as <code class="docutils literal notranslate"><span class="pre">REFPROP</span></code> to get the other state variables, such as pressure, enthalpy, and entropy.</p>
+<p>We’ve now found two ODEs expressing the change of two independent state variables <span class="math notranslate nohighlight">\((m, T)\)</span> over time. To get the full state evolution of this problem, we just need an initial condition and to numerically integrate these ODEs using libraries such as <code class="docutils literal notranslate"><span class="pre">scipy.integrate.ode</span></code> for Python or <code class="docutils literal notranslate"><span class="pre">ode45</span></code> for MATLAB. To translate these two state variables to a full description of a gas state, we’ll need a real gas database such as <code class="docutils literal notranslate"><span class="pre">REFPROP</span></code> to get the other state variables, such as pressure, enthalpy, and entropy.</p>
 </section>
 <section id="common-pitfalls">
 <h2>Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Link to this heading">#</a></h2>
@@ -526,9 +549,7 @@ m &amp;= \rho V \\
 </div></blockquote>
 <p>In many of the relations discussed in these documents, the differential form is the actual definition of the quantity, while its relation to other state properties incur some assumption. For example, the definition of specific heat capacity at constant volume is:</p>
 <div class="math notranslate nohighlight">
-\[
-c_v = \frac{\delta Q}{dT}|_{V=\textrm{const}}
-\]</div>
+\[ c_v = \left( \frac{de}{dT} \right)_{v=\textrm{const}} \]</div>
 <p>However, if you use the relation to temperature and specific internal energy, you would be making a calorically perfect assumption:</p>
 <div class="math notranslate nohighlight">
 \[
