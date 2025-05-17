@@ -410,6 +410,17 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momentum-correction-factor">Momentum Correction Factor</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation-of-energy">Conservation of Energy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grade-lines">Grade Lines</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#head-loss">Head Loss</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sources-of-head-loss-friction">Sources of Head Loss: Friction</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#laminar-flow">Laminar Flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#turbulent-flow">Turbulent Flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#friction-factor">Friction Factor</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sources-of-head-loss-turbulence-k-factor">Sources of Head Loss: Turbulence (K-Factor)</a></li>
 </ul>
 </li>
 </ul>
@@ -477,7 +488,7 @@ u d\dot{m} = u^2\rho dA
 <ul class="simple">
 <li><p>Note that hence unit energies thus are in units of length!</p></li>
 </ul>
-<p><strong>Potential energy</strong>: Every unit of fluid lifted above an arbitrary datum required a certain amount of work to lift it there. If the unit of fluid quantity is pounds (or newtons), the work required (in a uniform gravity field) is its weight times the height it was lifted, ft-lb (or N-m). Thus the unit energy is ft-lb/lb or ft (or N-m/N or m), equal numerically and dimensionally to its elevation Z above the datum. This is called the elevation or <strong>potential head</strong>.</p>
+<p><strong>Potential energy</strong>: Every unit of fluid lifted above an arbitrary datum required a certain amount of work to lift it there. If the unit of fluid quantity is pounds (or newtons), the work required (in a uniform gravity field) is its weight times the height it was lifted, ft-lb (or N-m). Thus the unit energy is ft-lb/lb or ft (or N-m/N or m), equal numerically and dimensionally to its elevation Z above the datum. This is called the elevation or <em>potential head</em>.</p>
 <p><strong>Pressure energy</strong>: Pressure is commonly expressed as force per unit area—for example, lb/in2, lb/ft2, or N/m2 (pascals). If the fluid’s
 pressure is divided by its weight density, its potential for doing work is expressed in potential energy terms. Consistent units will eliminate mixed unit problems. Thus:</p>
 <div class="math notranslate nohighlight">
@@ -498,12 +509,158 @@ V = \sqrt{2g \Delta Z}
 \Delta Z = V^2/2g
 \]</div>
 <p>A fluid’s energy of motion is thus <span class="math notranslate nohighlight">\(V^2/2g\)</span> ft-lb/lb or simply ft (or N-m/N or m). This is called the <em>velocity head</em>.</p>
+<ul class="simple">
+<li><p>Note: just like momentum, if we have laminar flow (and therefore a parabolic velocity profile in our pipe), the kinetic energies of each particle in the pipe varies depending on their locations in the cross section. Because the square of the average is not the same as the average of the squares, a correction factor <span class="math notranslate nohighlight">\(\phi\)</span> must be included if the average velocity is used to calculate the kinetic energy of the flowing fluid. <strong><span class="math notranslate nohighlight">\(\phi \approx 2.0\)</span> for laminar flow.</strong></p></li>
+</ul>
 <p><strong>Heat</strong>: Heat is equivalent to work (J = N-m), and so when dealing with heat transfer rate (J/s, or just power in Watts), we can express heat in the same units of potential energy by dividing by the weight flow rate of the fluid:</p>
 <div class="math notranslate nohighlight">
 \[
 \left( \frac{\textrm{ft-lb/s}}{\textrm{lb/s}} \right) = \textrm{ft}
 \]</div>
-<p><strong>Mechanical work energy</strong>: The mechanical work done on the fluid in the flow system by a pump and, as in the case of heat flux, the work done by the fluid in a turbine must be expressed in power units, or work per unit time, to maintain dimensional homogeneity in the energy equation. The power from a pump is converted to potential energy units in the same way as for heat: via the weight flow rate.</p>
+<p>Sometimes we call the conversion factor between N-m and J (or ft-lb and Btu) as <span class="math notranslate nohighlight">\(J\)</span>, and therefore you might see in textbooks:</p>
+<div class="math notranslate nohighlight">
+\[
+JQ = \left( \frac{\textrm{ft-lb}}{\textrm{Btu}} \right) \left( \frac{\textrm{Btu}}{\textrm{s}} \right)  = \frac{\textrm{ft-lb}}{\textrm{s}}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\frac{JQ}{\dot{w}} = \left( \frac{\textrm{ft-lb/s}}{\textrm{lb/s}} \right) = \textrm{ft}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(Q\)</span> is your heat transfer rate, or power. For internal energy <span class="math notranslate nohighlight">\(U\)</span> (of a gas), which is expressed in a per-weight basis, we can similarly use <span class="math notranslate nohighlight">\(J\)</span> to get it in potential energy units:</p>
+<div class="math notranslate nohighlight">
+\[
+JU = \left( \frac{\textrm{ft-lb}}{\textrm{Btu}} \right) \left( \frac{\textrm{Btu}}{\textrm{lb}} \right)  = \textrm{ft}
+\]</div>
+<p><strong>Mechanical work energy</strong>: The mechanical work <span class="math notranslate nohighlight">\(E_p\)</span> done on the fluid in the flow system by a pump and, as in the case of heat flux, the work done by the fluid in a turbine must be expressed in power units, or work per unit time, to maintain dimensional homogeneity in the energy equation. The power from a pump is converted to potential energy units in the same way as for heat: via the weight flow rate.</p>
+<hr class="docutils" />
+<p>So finally, conservation of energy in SI (<span class="math notranslate nohighlight">\(\rho\)</span> is in mass):</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{P}{\rho_1g} + \frac{\phi_1 V_1^2}{2g} + Z_1 + \frac{JU_1}{g} + \frac{JQ_1}{\dot{m}g} + \frac{E_p}{\dot{m}g} 
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+= \frac{P}{\rho_2g} + \frac{\phi_2 V_2^2}{2g} + Z_2 + \frac{JU_2}{g} + \frac{JQ_2}{\dot{m}g} + \frac{E_p}{\dot{m}g}
+\]</div>
+<p>If we have incompressible flow, apply conservation of mass (<span class="math notranslate nohighlight">\(\rho A v\)</span> gives that KE stays constant), no heat transfer, pumps, and a horizontal pipe, we see that the change in pressure is directly related to a change in the internal energy of the fluid:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{P_1}{\rho_1} - \frac{P_2}{\rho_2} = \Delta JU
+\]</div>
+<p><span class="math notranslate nohighlight">\(\Delta JU\)</span> is equivalent to the change in total head, also called <strong>head loss</strong> <span class="math notranslate nohighlight">\(H_L\)</span>. Note that here we only see it as a change in static pressure head, but this is because the other Bernoulli terms (elevation and kinetic energy) are assumed to be zero in our <em>specific scenario</em>.</p>
+<ul class="simple">
+<li><p>Note that head loss is technically not a loss of total energy; it is a loss of useful mechanical energy by conversion to heat energy.</p></li>
+</ul>
+</section>
+<section id="grade-lines">
+<h3>Grade Lines<a class="headerlink" href="#grade-lines" title="Link to this heading">#</a></h3>
+<p>Grade lines are just a visualization of conservation of energy.</p>
+<ul class="simple">
+<li><p><strong>Energy grade line</strong> (total head line): represents the sum of the elevation, pressure, and velocity heads. A pitot probe inserted in the flow would cause a column of the flowing fluid to rise in a manometer to that line as shown.</p></li>
+<li><p><strong>Hydraulic grade line</strong>: it is everywhere lower than the energy grade line by the value <span class="math notranslate nohighlight">\(V^2/2g\)</span> or the velocity head, and it is the line to which a static pressure tap will cause a column of the flowing fluid to rise.</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/grade_lines.png"><img alt="drawing" src="../_images/grade_lines.png" style="width: 550px;" />
+</a>
+<p>We can see that:</p>
+<ul class="simple">
+<li><p>Both lines are parallel and sloping downwards due to friction</p></li>
+<li><p>At the sudden enlargement, there is a loss of mechanical energy caused by the turbulence it produces</p></li>
+<li><p>Both lines are closer to each other after the enlargement because velocity decreased</p></li>
+<li><p>The hydraulic grade line rises abruptly downstream of the enlargement, indicating that not all of the kinetic energy difference before and after the enlargement is lost, but some is recovered and converted to pressure energy</p></li>
+</ul>
+</section>
+</section>
+<section id="head-loss">
+<h2>Head Loss<a class="headerlink" href="#head-loss" title="Link to this heading">#</a></h2>
+<p>The head loss term (<span class="math notranslate nohighlight">\(H_L\)</span>) designates the mechanical energy (embodied in the Bernoulli terms <span class="math notranslate nohighlight">\(P/\rho\)</span>, <span class="math notranslate nohighlight">\(\phi V^2/2g\)</span>, and <span class="math notranslate nohighlight">\(Z\)</span>) that is converted to thermal energy due to frictional resistance to flow.</p>
+<p>Assuming the flow line is level (<span class="math notranslate nohighlight">\(Z_1 = Z_2\)</span>) and no external heat transfer or work (and neglecting <span class="math notranslate nohighlight">\(\phi\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{P_1}{(\rho_w)_1} + \frac{V_1^2}{2g} = \frac{P_2}{(\rho_w)_2} + \frac{V_2^2}{2g} + H_L
+\]</div>
+<p>or</p>
+<div class="math notranslate nohighlight">
+\[
+H_L = \frac{P_1}{(\rho_w)_1} - \frac{P_2}{(\rho_w)_2} + \frac{V_1^2 - V_2^2}{2g}
+\]</div>
+<p>Assuming incompressible:</p>
+<div class="math notranslate nohighlight">
+\[
+H_L = \frac{P_1-P_2}{(\rho_w)}  + \frac{V_1^2 - V_2^2}{2g}
+\]</div>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(H_L\)</span> is a loss in total energy (energy grade line)!</p>
+</div></blockquote>
+<section id="sources-of-head-loss-friction">
+<h3>Sources of Head Loss: Friction<a class="headerlink" href="#sources-of-head-loss-friction" title="Link to this heading">#</a></h3>
+<p>To reiterate, this only happens due to viscosity. Friction between the wall and fluid induces a shear force on the subsequent internal layers of the fluid, amounting to a loss in energy.</p>
+<section id="laminar-flow">
+<h4>Laminar Flow<a class="headerlink" href="#laminar-flow" title="Link to this heading">#</a></h4>
+<p>The Poiseuille law:</p>
+<div class="math notranslate nohighlight">
+\[
+H_L = \frac{32 \mu L V}{\rho_w D^2}
+\]</div>
+</section>
+<section id="turbulent-flow">
+<h4>Turbulent Flow<a class="headerlink" href="#turbulent-flow" title="Link to this heading">#</a></h4>
+<p>The Weisbach formula:</p>
+<div class="math notranslate nohighlight">
+\[
+H_L = f \frac{L}{D} \frac{V^2}{2g}
+\]</div>
+</section>
+<section id="friction-factor">
+<h4>Friction Factor<a class="headerlink" href="#friction-factor" title="Link to this heading">#</a></h4>
+<p>Depends on Reynold’s number and the relative roughness of the pipe. For laminar flow, <span class="math notranslate nohighlight">\(f = 64/\textrm{Re}\)</span>. For turbulent flow, use the Colebrook-White forumla:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{\sqrt{f}} = -2 \log_{10} \left( \frac{\varepsilon/D}{3.7} + \frac{2.51}{\mathrm{Re} \sqrt{f}} \right)
+\]</div>
+<p>This requires an iterative solver, so if you’re in a rush, you can use the Moody chart for the entire flow regime:</p>
+<a class="reference internal image-reference" href="../_images/moody.png"><img alt="drawing" src="../_images/moody.png" style="width: 550px;" />
+</a>
+<p>Also, you can use the Churchill formulation for an explicit formula for <span class="math notranslate nohighlight">\(f\)</span> across all flow regimes:</p>
+<div class="math notranslate nohighlight">
+\[
+f = 8 \left[ \left( \frac{8}{\text{Re}} \right)^{12} + \left( A + B \right)^{-1.5} \right]^{\frac{1}{12}}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+A = \left[ 2.457 \ln \left( \frac{1}{\left( \frac{7}{\text{Re}} \right)^{0.9} + 0.27 \frac{\varepsilon}{D}} \right) \right]^{16}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+B = \left( \frac{37530}{\text{Re}} \right)^{16}
+\]</div>
+</section>
+</section>
+<section id="sources-of-head-loss-turbulence-k-factor">
+<h3>Sources of Head Loss: Turbulence (K-Factor)<a class="headerlink" href="#sources-of-head-loss-turbulence-k-factor" title="Link to this heading">#</a></h3>
+<p>Induced turbulence from flow obstructions (valves) or changes (bends) is referred to as <em>local</em> or <em>minor</em> losses.</p>
+<div class="math notranslate nohighlight">
+\[
+H_L = K \frac{V^2}{2g}
+\]</div>
+<p><span class="math notranslate nohighlight">\(K\)</span> (“K-factor”) is a geometry-dependent constant, and so it can be said that <strong>K is the head loss measured in units of velocity heads.</strong></p>
+<p>We can see that the Weisbach equation (again, meant for turbulent frictional losses) can be written in terms of K-factor by allowing:</p>
+<div class="math notranslate nohighlight">
+\[
+K = f\frac{L}{D}
+\]</div>
+<p>So, we can write the head loss equation (from energy conservation) as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{P_1 - P_2}{\rho_w} = H_L - \frac{V_1^2}{2g} \left[ 1-\left( \frac{A_1}{A_2} \right)^2 \right]
+\]</div>
+<p>or
+$<span class="math notranslate nohighlight">\(
+P_1 - P_2 = \frac{V_1^2\rho_w}{2g} \left[ K_1-1+\left( \frac{A_1}{A_2} \right)^2 \right]
+\)</span>$</p>
+<p>Above, the subscript <span class="math notranslate nohighlight">\(1\)</span> indicates the inlet condition. We can also get this equation in terms of weight flow rate using the <span class="math notranslate nohighlight">\(\dot{w} = \rho_w A V\)</span>.</p>
+<blockquote>
+<div><p>For turbulent losses, though it is a function of surface roughness, the most influential parameter is Reynold’s number <span class="math notranslate nohighlight">\(Re\)</span>.</p>
+</div></blockquote>
 </section>
 </section>
 </section>
@@ -575,6 +732,17 @@ V = \sqrt{2g \Delta Z}
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momentum-correction-factor">Momentum Correction Factor</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation-of-energy">Conservation of Energy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grade-lines">Grade Lines</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#head-loss">Head Loss</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sources-of-head-loss-friction">Sources of Head Loss: Friction</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#laminar-flow">Laminar Flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#turbulent-flow">Turbulent Flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#friction-factor">Friction Factor</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sources-of-head-loss-turbulence-k-factor">Sources of Head Loss: Turbulence (K-Factor)</a></li>
 </ul>
 </li>
 </ul>
