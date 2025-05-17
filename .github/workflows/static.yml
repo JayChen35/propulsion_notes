@@ -16,15 +16,16 @@ on:
 # This job installs dependencies, builds the book, and pushes it to `gh-pages`
 jobs:
   deploy-book:
-    - name: Preload artifact action
-      uses: actions/upload-artifact@v3
-    
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
     steps:
     - uses: actions/checkout@v4
+
+    # CUSTOM BLOCK
+    - name: Preload artifact action
+      uses: actions/upload-artifact@v3
 
     # Install dependencies
     - name: Set up Python 3.11
