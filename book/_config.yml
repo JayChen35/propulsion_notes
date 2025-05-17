@@ -42,3 +42,4 @@ parse:
   myst_enable_extensions:
     - amsmath  # For LateX rendering by default
     - dollarmath  # For inline math with MyST-Parser
+    - html_image  # UNSAFE: but used for image resizing

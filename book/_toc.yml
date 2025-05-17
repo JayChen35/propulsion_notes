@@ -8,8 +8,11 @@ parts:
   - caption: "Part I"
     chapters:
     - file: intro/introduction
-    - file: intro/markdown
   - caption: "Part II"
     chapters:
-    - file: fluids/notebooks
-    - file: fluids/markdown-notebooks
+    - file: pipe_flow/incompressible
+  - caption: "Reference"
+    chapters:
+    - file: ref/markdown
+    - file: ref/notebooks
+    - file: ref/markdown-notebooks
