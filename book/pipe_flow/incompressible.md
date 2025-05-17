@@ -121,7 +121,7 @@ Grade lines are just a visualization of conservation of energy.
 - **Energy grade line** (total head line): represents the sum of the elevation, pressure, and velocity heads. A pitot probe inserted in the flow would cause a column of the flowing fluid to rise in a manometer to that line as shown.
 - **Hydraulic grade line**: it is everywhere lower than the energy grade line by the value $V^2/2g$ or the velocity head, and it is the line to which a static pressure tap will cause a column of the flowing fluid to rise.
 
-<img src="assets/grade_lines.png" alt="drawing" width="550"/>
+<img align="center" src="assets/grade_lines.png" alt="drawing" width="550"/>
 
 We can see that:
 - Both lines are parallel and sloping downwards due to friction
@@ -179,7 +179,7 @@ $$
 
 This requires an iterative solver, so if you're in a rush, you can use the Moody chart for the entire flow regime:
 
-<img src="assets/moody.png" alt="drawing" width="550"/>
+<img align="center" src="assets/moody.png" alt="drawing" width="650"/>
 
 Also, you can use the Churchill formulation for an explicit formula for $f$ across all flow regimes:
 
@@ -215,7 +215,9 @@ So, we can write the head loss equation (from energy conservation) as follows:
 $$
 \frac{P_1 - P_2}{\rho_w} = H_L - \frac{V_1^2}{2g} \left[ 1-\left( \frac{A_1}{A_2} \right)^2 \right]
 $$
+
 or
+
 $$
 P_1 - P_2 = \frac{V_1^2\rho_w}{2g} \left[ K_1-1+\left( \frac{A_1}{A_2} \right)^2 \right]
 $$
