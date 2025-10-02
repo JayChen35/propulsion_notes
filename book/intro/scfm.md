@@ -23,6 +23,10 @@ $\dot{V}$ is the standard flow rate (SCFM in imperial, SCCM in metric). So in ac
 
 1 SCFM of nitrogen is always 1 SCFM of nitrogen at all conditions by definition, while 1 SCFM of nitrogen carries ~7x the mass flow rate as 1 SCFM of helium because of the molecular weight difference.
 
+**A Quick Aside**
+
+SCFM exists so that an engineer can plug in multiple gas species in a fluids system and get an idea of mass flow rate. It's also, in my opinion, more intuitive to think about gas flow rates as a molar flow rate, since I can't really intuit a nitrogen molecule actually being 7x heavier than a helium atom. So just imagining moles of gas flow feels more intuitive, and "50 SCFM" is easier to pass around rather than 0.0025 kg/s.
+
 ## The Math
 
 In most propulsion contexts, we care about mass flow rate $\dot{m}$ due to conservation equations. So, we often have to convert between SCFM and $\dot{m}$. How? Take again the combined ideal gas law:
