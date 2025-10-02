@@ -8,6 +8,7 @@ parts:
   - caption: "Part I"
     chapters:
     - file: intro/introduction
+    - file: intro/scfm
   - caption: "Part II"
     chapters:
     - file: pipe_flow/incompressible
